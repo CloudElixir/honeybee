@@ -1,0 +1,23 @@
+# Dependencies & build output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Local env (secrets)
+.env
+.env.local
+frontend/.env
+frontend/.env.local
+
+# PHP sessions & local uploads (not for git)
+honeybee_admin/storage/sessions/
+honeybee_admin/storage/uploads/
+
+# Archives & backups
+*.zip
+
+# OS / editor
+.DS_Store
+*.log
+.idea/
+.vscode/

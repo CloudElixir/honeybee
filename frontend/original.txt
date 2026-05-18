@@ -1,0 +1,2 @@
+thi
+If you want, next I can add a small Admin “System Health” page that checks DB tables, uploads directory, and API connectivity in one click so you can quickly diagnose future panel issues.

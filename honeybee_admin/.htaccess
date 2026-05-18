@@ -1,0 +1,13 @@
+# HoneyBee admin — Apache (Hostinger). Upload with the rest of `honeybee_admin/` into public_html.
+
+DirectoryIndex index.php index.html
+
+# Never serve secrets
+<FilesMatch "^\.env">
+  Require all denied
+</FilesMatch>
+
+# Optional: block raw SQLite in web root if present
+<FilesMatch "\.(sqlite|sqlite3)$">
+  Require all denied
+</FilesMatch>
