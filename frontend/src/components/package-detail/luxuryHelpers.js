@@ -85,12 +85,23 @@ export function tierPriceForStar(pkg, stars) {
   return Number.isFinite(base) && base > 0 ? base : 0
 }
 
+/** Resolve 3-star / 4-star / 5-star from CMS row (hotel_type, notes, or star_rating). */
+export function hotelTierKey(hotel) {
+  const type = String(hotel?.hotel_type || '').toLowerCase().trim()
+  if (type === '3-star' || type === '4-star' || type === '5-star') return type
+  const notes = String(hotel?.notes || '').toLowerCase().trim()
+  if (notes === '3-star' || notes === '4-star' || notes === '5-star') return notes
+  const m = notes.match(/\b([345])\s*[- ]?\s*star\b/i)
+  if (m) return `${m[1]}-star`
+  const stars = Number(hotel?.star_rating)
+  if (stars === 3 || stars === 4 || stars === 5) return `${stars}-star`
+  return ''
+}
+
 /** @param {unknown[]} hotels @param {3|4|5} tier */
 export function hotelsForTier(hotels, tier) {
   const want = `${tier}-star`
-  return (Array.isArray(hotels) ? hotels : []).filter(
-    (h) => String(h?.hotel_type || '').toLowerCase() === want
-  )
+  return (Array.isArray(hotels) ? hotels : []).filter((h) => hotelTierKey(h) === want)
 }
 
 /**

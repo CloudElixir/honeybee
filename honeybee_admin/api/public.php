@@ -62,6 +62,24 @@ function hb_normalize_slug(string $value): string
     return trim($s, '-');
 }
 
+/** Ensure `hotel_type` is set when legacy rows only have notes like "3-star". */
+function hb_normalize_hotel_row(array &$row): void
+{
+    $type = strtolower(trim((string) ($row['hotel_type'] ?? '')));
+    if ($type === '3-star' || $type === '4-star' || $type === '5-star') {
+        $row['hotel_type'] = $type;
+        return;
+    }
+    $notes = strtolower(trim((string) ($row['notes'] ?? '')));
+    if ($notes === '3-star' || $notes === '4-star' || $notes === '5-star') {
+        $row['hotel_type'] = $notes;
+        return;
+    }
+    if (preg_match('/\b([345])\s*[- ]?\s*star\b/i', (string) ($row['notes'] ?? ''), $m)) {
+        $row['hotel_type'] = $m[1] . '-star';
+    }
+}
+
 /** Resolve numeric package id from URL slug when client id is missing or stale. */
 function hb_resolve_package_id_by_slug(PDO $pdo, string $pkgActiveSql, string $slugInput): ?int
 {
@@ -378,6 +396,11 @@ switch ($resource) {
         $stmt = db()->prepare("SELECT * FROM package_hotels WHERE package_id IN ({$placeholders}) ORDER BY id DESC");
         $stmt->execute($ids);
         $rows = $stmt->fetchAll();
+        foreach ($rows as &$row) {
+            $row['image_paths'] = [];
+            hb_normalize_hotel_row($row);
+        }
+        unset($row);
         if (!empty($rows)) {
             $hotelIds = array_values(array_filter(array_map(static fn($row) => (int) ($row['id'] ?? 0), $rows), static fn($id) => $id > 0));
             if (!empty($hotelIds)) {

@@ -147,6 +147,8 @@ function ensure_runtime_schema(PDO $pdo): void
         ensure_column_exists($pdo, 'packages', 'best_time_visit', 'TEXT');
         ensure_column_exists($pdo, 'packages', 'covered_destinations', 'TEXT');
         ensure_column_exists($pdo, 'packages', 'cancellation_policy', 'TEXT');
+        ensure_bali_romantic_itinerary_seed($pdo);
+        ensure_bali_romantic_hotel_types($pdo);
         return;
     }
 
@@ -209,6 +211,35 @@ function ensure_runtime_schema(PDO $pdo): void
     ensure_column_exists($pdo, 'packages', 'covered_destinations', 'VARCHAR(500) NULL');
     ensure_column_exists($pdo, 'packages', 'cancellation_policy', 'TEXT NULL');
     ensure_bali_romantic_itinerary_seed($pdo);
+    ensure_bali_romantic_hotel_types($pdo);
+}
+
+/** Copy star tier from legacy `notes` (e.g. "3-star") into `hotel_type` when missing. */
+function ensure_bali_romantic_hotel_types(PDO $pdo): void
+{
+    try {
+        $baliPkg = $pdo->query("SELECT id FROM packages WHERE title = 'Bali Romantic Escape' LIMIT 1")->fetch();
+        if (!$baliPkg) {
+            return;
+        }
+        $baliId = (int) $baliPkg['id'];
+        $driver = (string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'sqlite') {
+            $pdo->prepare(
+                "UPDATE package_hotels SET hotel_type = LOWER(TRIM(notes))
+                 WHERE package_id = ? AND (hotel_type IS NULL OR TRIM(hotel_type) = '')
+                 AND LOWER(TRIM(notes)) IN ('3-star','4-star','5-star')"
+            )->execute([$baliId]);
+            return;
+        }
+        $pdo->prepare(
+            "UPDATE package_hotels SET hotel_type = LOWER(TRIM(notes))
+             WHERE package_id = ? AND (hotel_type IS NULL OR TRIM(hotel_type) = '')
+             AND LOWER(TRIM(notes)) IN ('3-star','4-star','5-star')"
+        )->execute([$baliId]);
+    } catch (Throwable $e) {
+        // Non-fatal.
+    }
 }
 
 /** Canonical 5-day Bali Romantic Escape itinerary (Bayard-style day-wise activities). */
