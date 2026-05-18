@@ -1,1 +1,0 @@
-import{r,a7 as i}from"./index-CeCPWj75.js";function c(){const[s,n]=r.useState(null),[u,a]=r.useState(null);return r.useEffect(()=>{let t=!0;return i().then(e=>{t&&n(e)}).catch(e=>{t&&a(e)}),()=>{t=!1}},[]),{settings:s,error:u}}export{c as u};
