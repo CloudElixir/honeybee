@@ -4,11 +4,27 @@ Luxury travel marketing site (React + Vite) with a PHP admin CMS for packages, i
 
 ## Live site (GitHub Pages)
 
-After pushing to `main` and enabling **GitHub Pages → Source: GitHub Actions**, the site is published at:
+**URL:** https://cloudelixir.github.io/honeybee/
 
-**https://cloudelixir.github.io/honeybee/**
+### One-time GitHub setup
 
-Package data is loaded from the hosted admin API (`VITE_ADMIN_PUBLIC_BASE` in the deploy workflow). On Hostinger, add this origin to CORS:
+1. Create the repo: https://github.com/CloudElixir/honeybee
+2. **Settings → Pages → Build and deployment → Branch:** `gh-pages` / `/ (root)`
+3. On Hostinger admin, add GitHub to CORS (see below)
+
+### Publish the site
+
+```bash
+cd frontend
+npm install
+npm run deploy:pages
+```
+
+This builds the app and pushes `frontend/dist` to the `gh-pages` branch.
+
+> **Note:** Git push tokens need `repo` scope. If push fails on `.github/workflows`, use `npm run deploy:pages` instead, or add the `workflow` scope to your PAT and enable **Pages → GitHub Actions**.
+
+Package data comes from the hosted admin API. On Hostinger, add this origin to CORS:
 
 ```env
 HB_APP_CORS_ORIGINS=https://cloudelixir.github.io,https://slategrey-hamster-219402.hostingersite.com,http://localhost:5173
