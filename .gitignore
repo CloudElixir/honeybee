@@ -1,23 +1,20 @@
-# Dependencies & build output
+# Backend / local-only (not shipped to client via this repo)
+honeybee_admin/
+honeybee-admin/
+*.zip
+
+# Dependencies & build
 node_modules/
 frontend/node_modules/
 frontend/dist/
 
-# Local env (secrets)
+# Env secrets
 .env
 .env.local
 frontend/.env
 frontend/.env.local
 
-# PHP sessions & local uploads (not for git)
+# PHP / OS
 honeybee_admin/storage/sessions/
-honeybee_admin/storage/uploads/
-
-# Archives & backups
-*.zip
-
-# OS / editor
 .DS_Store
 *.log
-.idea/
-.vscode/

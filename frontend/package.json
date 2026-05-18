@@ -6,7 +6,8 @@
   "scripts": {
     "dev:vite": "node ./node_modules/vite/bin/vite.js",
     "dev:admin-api": "php -S 127.0.0.1:8000 -t ../honeybee_admin",
-    "dev": "concurrently -n admin,vite -c magenta,cyan \"npm run dev:admin-api\" \"npm run dev:vite\"",
+    "dev": "npm run dev:vite",
+    "dev:full": "concurrently -n admin,vite -c magenta,cyan \"npm run dev:admin-api\" \"npm run dev:vite\"",
     "dev:reset": "rm -rf node_modules/.vite && npm run dev",
     "dev:vite:force": "node ./node_modules/vite/bin/vite.js --force",
     "build": "node ./node_modules/vite/bin/vite.js build && npm run sitemap",

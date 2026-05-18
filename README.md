@@ -1,67 +1,38 @@
-# Honeybee Trips
+# Honeybee Trips — Website (Frontend)
 
-Luxury travel marketing site (React + Vite) with a PHP admin CMS for packages, itineraries, and hotels.
+## Live site (send this link to your client)
 
-## Live site (GitHub Pages)
+**https://cloudelixir.github.io/honeybee/**
 
-**URL:** https://cloudelixir.github.io/honeybee/
+Example package page:  
+**https://cloudelixir.github.io/honeybee/packages/bali-romantic-escape**
 
-### One-time GitHub setup
+Package content (itinerary, hotels, prices) is loaded from the hosted CMS API configured at build time.
 
-1. Create the repo: https://github.com/CloudElixir/honeybee
-2. **Settings → Pages → Build and deployment → Branch:** `gh-pages` / `/ (root)`
-3. On Hostinger admin, add GitHub to CORS (see below)
+---
 
-### Publish the site
+## For developers
 
 ```bash
 cd frontend
 npm install
+npm run dev:vite
+```
+
+Open http://localhost:5173
+
+To publish an update to GitHub Pages:
+
+```bash
+cd frontend
 npm run deploy:pages
 ```
 
-This builds the app and pushes `frontend/dist` to the `gh-pages` branch.
+Requires GitHub Pages enabled: **Settings → Pages → Branch `gh-pages` / root**.
 
-> **Note:** Git push tokens need `repo` scope. If push fails on `.github/workflows`, use `npm run deploy:pages` instead, or add the `workflow` scope to your PAT and enable **Pages → GitHub Actions**.
+---
 
-Package data comes from the hosted admin API. On Hostinger, add this origin to CORS:
+## Repository contents
 
-```env
-HB_APP_CORS_ORIGINS=https://cloudelixir.github.io,https://slategrey-hamster-219402.hostingersite.com,http://localhost:5173
-```
-
-## Local development
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-This starts Vite (`:5173`) and the PHP API (`:8000`). Open http://localhost:5173
-
-Admin panel (local): http://127.0.0.1:8000/admin/
-
-## Project layout
-
-| Path | Description |
-|------|-------------|
-| `frontend/` | React SPA (public website) |
-| `honeybee_admin/` | PHP CMS + public API (`api/public.php`) |
-
-## Production build
-
-```bash
-cd frontend
-npm run build
-```
-
-For GitHub Pages locally:
-
-```bash
-VITE_BASE_PATH=/honeybee/ VITE_SITE_URL=https://cloudelixir.github.io/honeybee npm run build
-```
-
-## Custom domain
-
-To use your own domain instead of `github.io`, set the custom domain in GitHub repo **Settings → Pages**, then update `VITE_SITE_URL` and `VITE_BASE_PATH=/` in `.github/workflows/deploy-pages.yml`.
+This repo contains **only the React frontend** (`frontend/`).  
+The PHP admin CMS runs separately on Hostinger (not included here).
