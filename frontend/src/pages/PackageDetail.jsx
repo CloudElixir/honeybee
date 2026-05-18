@@ -11,8 +11,10 @@ import {
 import { LuxuryPackageDetailView } from '../components/package-detail/LuxuryPackageDetailView'
 import {
   findPackageByRouteParam,
+  isBaliRomanticEscapePackage,
   rowBelongsToPackage,
 } from '../components/package-detail/luxuryHelpers'
+import { baliRomanticEscapeFallbackItinerary } from '../data/baliRomanticEscapeItinerary'
 import { useBooking } from '../context/BookingContext'
 import { useAdminSettings } from '../hooks/useAdminSettings'
 import { useSeo } from '../hooks/useSeo'
@@ -97,8 +99,14 @@ export function PackageDetail() {
               /* slug fallback optional */
             }
           }
-          const scopedItinerary = itsRows.filter((row) => rowBelongsToPackage(row, pid))
+          let scopedItinerary = itsRows.filter((row) => rowBelongsToPackage(row, pid))
           const scopedHotels = hsRows.filter((row) => rowBelongsToPackage(row, pid))
+          if (
+            scopedItinerary.length === 0 &&
+            isBaliRomanticEscapePackage(found, id)
+          ) {
+            scopedItinerary = baliRomanticEscapeFallbackItinerary(pid)
+          }
           if (import.meta.env.DEV) {
             if (itsRows.length > 0 && scopedItinerary.length === 0) {
               console.warn(

@@ -28,6 +28,13 @@ export function rowBelongsToPackage(row, packageId) {
   return rowPid === pid
 }
 
+/** Bali Romantic Escape — URL slug or CMS title match. */
+export function isBaliRomanticEscapePackage(pkg, routeParam = '') {
+  const slug = normalizeSlug(routeParam || pkg?.slug || pkg?.title || '')
+  if (slug === 'bali-romantic-escape') return true
+  return /bali\s*romantic\s*escape/i.test(String(pkg?.title || ''))
+}
+
 export function findPackageByRouteParam(packages, routeParam) {
   const list = Array.isArray(packages) ? packages : []
   const raw = String(routeParam ?? '').trim()
